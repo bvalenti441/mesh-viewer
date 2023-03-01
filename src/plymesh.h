@@ -1,5 +1,5 @@
 //--------------------------------------------------
-// Author:
+// Author: Ben Valenti
 // Date:
 // Description: Loads PLY files in ASCII format
 //--------------------------------------------------
@@ -53,6 +53,8 @@ namespace agl {
       std::vector<GLfloat> _positions;
       std::vector<GLfloat> _normals;
       std::vector<GLuint> _faces;
+      glm::vec3 MinBounds;
+      glm::vec3 MaxBounds;
    };
 }
 
