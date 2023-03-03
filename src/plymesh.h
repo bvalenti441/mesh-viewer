@@ -45,6 +45,12 @@ namespace agl {
       // face indices in this model
       const std::vector<GLuint>& indices() const;
 
+      const std::vector<GLfloat>& colors() const;
+
+      const std::vector<GLfloat>& uvs() const;
+
+      void clear();
+
    protected:
       void init();
 
@@ -52,6 +58,8 @@ namespace agl {
 
       std::vector<GLfloat> _positions;
       std::vector<GLfloat> _normals;
+      std::vector<GLfloat> _colors;
+      std::vector<GLfloat> _uvs;
       std::vector<GLuint> _faces;
       glm::vec3 MinBounds;
       glm::vec3 MaxBounds;

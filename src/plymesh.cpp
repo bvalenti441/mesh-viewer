@@ -35,10 +35,10 @@ namespace agl {
          std::cout << "WARNING: Cannot load different files with the same PLY mesh\n";
          return false;
       }
-      // todo: your code here
-      std::string line = "";
+      std::string line;
       std::ifstream myFile(filename);
       int numVertices;
+
       // process metadata
       std::getline(myFile, line);
       if (line != "Ply" && line != "ply") {
@@ -87,6 +87,28 @@ namespace agl {
       getline(ss, s, ' ');
       _normals.push_back(stof(s));
 
+      if (getline(ss, s, ' ')) {
+          _normals.push_back(stof(s));
+          getline(ss, s, ' ');
+          _normals.push_back(stof(s));
+          getline(ss, s, ' ');
+          _normals.push_back(stof(s));
+      }
+      if (getline(ss, s, ' ')) {
+          _colors.push_back(stof(s));
+          getline(ss, s, ' ');
+          _colors.push_back(stof(s));
+          getline(ss, s, ' ');
+          _colors.push_back(stof(s));
+      }
+      if (getline(ss, s, ' ')) {
+          _uvs.push_back(stof(s));
+          getline(ss, s, ' ');
+          _uvs.push_back(stof(s));
+          getline(ss, s, ' ');
+          _uvs.push_back(stof(s));
+      }
+
       for(int i = 0; i < numVertices - 1; ++i) {
           std::getline(myFile, line);
           stringstream ss(line);
@@ -120,12 +142,27 @@ namespace agl {
           }
           _positions.push_back(z);
 
-          getline(ss, s, ' ');
-          _normals.push_back(stof(s));
-          getline(ss, s, ' ');
-          _normals.push_back(stof(s));
-          getline(ss, s, ' ');
-          _normals.push_back(stof(s));
+          if (getline(ss, s, ' ')) {
+              _normals.push_back(stof(s));
+              getline(ss, s, ' ');
+              _normals.push_back(stof(s));
+              getline(ss, s, ' ');
+              _normals.push_back(stof(s));
+          }
+          if (getline(ss, s, ' ')) {
+              _colors.push_back(stof(s));
+              getline(ss, s, ' ');
+              _colors.push_back(stof(s));
+              getline(ss, s, ' ');
+              _colors.push_back(stof(s));
+          }
+          if (getline(ss, s, ' ')) {
+              _uvs.push_back(stof(s));
+              getline(ss, s, ' ');
+              _uvs.push_back(stof(s));
+              getline(ss, s, ' ');
+              _uvs.push_back(stof(s));
+          }
       }
       MinBounds = vec3(minX, minY, minZ);
       MaxBounds = vec3(maxX, maxY, maxZ);
@@ -170,7 +207,24 @@ namespace agl {
       return _normals;
    }
 
+   const std::vector<GLfloat>& PLYMesh::colors() const {
+       return _colors;
+   }
+
+   const std::vector<GLfloat>& PLYMesh::uvs() const {
+       return _uvs;
+   }
+
    const std::vector<GLuint>& PLYMesh::indices() const {
       return _faces;
+   }
+
+   void PLYMesh::clear() {
+       
+       _positions.clear();
+       _faces.clear();
+       _colors.clear();
+       _uvs.clear();
+       _normals.clear();
    }
 }
