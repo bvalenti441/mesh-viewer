@@ -22,6 +22,12 @@ public:
    }
 
    void setup() {
+       renderer.loadShader("normals", "../shaders/normals.vs", "../shaders/normals.fs");
+       renderer.loadShader("phong-vertex", "../shaders/phong-vertex.vs", "../shaders/phong-vertex.fs");
+       renderer.loadShader("phong-pixel", "../shaders/phong-pixel.vs", "../shaders/phong-pixel.fs");
+       shaders.push_back("normals");
+       shaders.push_back("phong-vertex");
+       shaders.push_back("phong-pixel");
        modelNames = GetFilenamesInDir("../models", "ply");
        mesh.load("..\\models\\" + modelNames[0]);
        vec3 mins = mesh.minBounds();
@@ -105,7 +111,7 @@ public:
                currFile = 0;
            }
            else {
-               currFile--;
+               currFile++;
            }
            mesh.load("..\\models\\" + modelNames[currFile]);
            vec3 mins = mesh.minBounds();
@@ -142,16 +148,37 @@ public:
        else if (key == GLFW_KEY_LEFT_SHIFT) {
            leftShiftDown = true;
        }
+       else if (key == GLFW_KEY_S) {
+           if (currShader == shaders.size() - 1) {
+               currShader = 0;
+           }
+           else {
+               currShader++;
+           }
+       }
    }
 
    void draw() {
+      renderer.beginShader(shaders[currShader]); // activates shader with given name
+      
+      renderer.setUniform("eyePos", eyePos);
+      renderer.setUniform("lightPos", lightPos);
+      renderer.setUniform("material.ambient", vec3(0.1, 0.1, 0.1));
+      renderer.setUniform("material.diffuse", vec3(0.0, 0.0, 1.0));
+      renderer.setUniform("material.specular", vec3(1.0, 1.0, 1.0));
+
       float aspect = ((float)width()) / height();
       renderer.perspective(glm::radians(60.0f), aspect, 0.1f, 50.0f);
       renderer.lookAt(eyePos, lookPos, up);
+      
       renderer.rotate(rotation);
       renderer.scale(scalar);
+      
       renderer.translate(translation);
+      
       renderer.mesh(mesh);
+      
+      renderer.endShader();
    }
 
 protected:
@@ -169,6 +196,9 @@ protected:
    GLfloat Elevation = 0;
    bool leftMouseDown = false;
    bool leftShiftDown = false;
+   std::vector<string> shaders;
+   int currShader = 0;
+   vec3 lightPos = vec3(10.0f, 10.0f, 10.0f);
 };
 
 int main(int argc, char** argv)

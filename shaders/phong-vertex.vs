@@ -8,8 +8,32 @@ uniform mat3 NormalMatrix;
 uniform mat4 ModelViewMatrix;
 uniform mat4 MVP;
 uniform bool HasUV;
+uniform vec3 lightPos;
+uniform vec3 eyePos;
+
+struct Material {
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+};
+
+uniform Material material;
+
+out vec3 newColor;
 
 void main()
 {
-   gl_Position = MVP * vec4(vPos, 1.0);
+	vec3 normEye = normalize(NormalMatrix * vNormals);
+	vec3 posEye = vec3(ModelViewMatrix * vec4(vPos, 1.0));
+	
+	vec3 lightDir = normalize(lightPos - vec3(ModelViewMatrix * vec4(posEye, 1.0)));
+	vec3 diffuse = material.diffuse * max(dot(normEye, lightDir), 0.0);
+	
+	vec3 viewDir = normalize(eyePos - posEye);
+	vec3 reflectDir = reflect(-lightDir, normEye);
+	vec3 specular = material.specular * pow(max(dot(viewDir, reflectDir), 0.0), 32);
+	
+	newColor = material.ambient + diffuse + specular;
+	
+	gl_Position = MVP * vec4(vPos, 1.0);
 }
