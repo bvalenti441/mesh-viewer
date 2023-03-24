@@ -24,17 +24,23 @@ out vec3 color;
 
 void main()
 {
-	if (HasUV) {
+	if(HasUV) {
 		uv = vUV;
-	} else {
+	} 
+	else {
 		uv = vec2(0,0);
 	}
 	vec3 normEye = normalize(NormalMatrix * vNormals);
 	vec3 posEye = vec3(ModelViewMatrix * vec4(vPos, 1.0));
 	
 	vec3 lightDir = normalize(lightPos - vec3(ModelViewMatrix * vec4(posEye, 1.0)));
-	vec3 diffuse = material.diffuse * max(dot(normEye, lightDir), 0.0);
-	
+	vec3 diffuse = vec3(0, 0, 0);
+	if (dot(lightDir, normEye) < 0) {
+		diffuse = vec3(1.0f - material.diffuse.x, 1.0f - material.diffuse.y, 1.0f - material.diffuse.z) * max(dot(normEye, lightDir), 0.0);
+	}
+	else {
+		diffuse = material.diffuse * max(dot(normEye, lightDir), 0.0);
+	}
 	vec3 viewDir = normalize(eyePos - posEye);
 	vec3 reflectDir = reflect(-lightDir, normEye);
 	vec3 specular = material.specular * pow(max(dot(viewDir, reflectDir), 0.0), 32);

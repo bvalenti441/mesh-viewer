@@ -12,8 +12,7 @@ void main()
 	if(HasUV) {
 		vec3 c = color * texture(diffuseTexture, uv*10.0f).xyz; 
 		FragColor = vec4(c, 1.0f);
-	}
-	else {
+	} else {
 		FragColor = vec4(color, 1.0f);
 	}
 }
