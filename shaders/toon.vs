@@ -19,17 +19,10 @@ struct Material {
 
 uniform Material material;
 
-out vec2 uv;
 out vec3 color;
 
 void main()
 {
-	if(HasUV) {
-		uv = vUV;
-	} 
-	else {
-		uv = vec2(0,0);
-	}
 	vec3 normEye = normalize(NormalMatrix * vNormals);
 	vec3 posEye = vec3(ModelViewMatrix * vec4(vPos, 1.0));
 	

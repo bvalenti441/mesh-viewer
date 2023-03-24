@@ -1,19 +1,9 @@
 #version 400
 
-uniform sampler2D diffuseTexture;
-uniform bool HasUV;
-
-in vec2 uv;
-in vec3 color;
+in vec3 newColor;
 out vec4 FragColor;
 
 void main()
 {
-	if(HasUV) {
-		vec3 c = color * texture(diffuseTexture, uv*10.0f).xyz; 
-		FragColor = vec4(c, 1.0f);
-	}
-	else {
-		FragColor = vec4(color, 1.0f);
-	}
+   FragColor = vec4(newColor, 1.0);
 }

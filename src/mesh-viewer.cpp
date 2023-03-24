@@ -30,17 +30,8 @@ public:
        shaders.push_back("phong-vertex");
        shaders.push_back("phong-pixel");
        shaders.push_back("toon");
-       
        modelNames = GetFilenamesInDir("../models", "ply");
        mesh.load("../models/" + modelNames[0]);
-
-       textureNames = GetFilenamesInDir("../textures", "png");
-       renderer.loadTexture(textureNames[0], "../textures/" + textureNames[0], 0);
-
-       renderer.setUniform("material.ambient", vec3(1.0, 1.0, 1.0));
-       renderer.setUniform("material.diffuse", vec3(1.0f, 1.0f, 1.0f));
-       renderer.setUniform("material.specular", vec3(1.0f, 1.0f, 1.0f));
-
        vec3 mins = mesh.minBounds();
        vec3 maxs = mesh.maxBounds();
        float scale = glm::min(glm::min(10 / (maxs.x - mins.x), 10 / (maxs.y - mins.y)), 10 / (maxs.z - mins.z));
@@ -117,13 +108,14 @@ public:
    void keyDown(int key, int mods) {
        if (key == GLFW_KEY_N) {
            mesh.clear();
-           if (currModel == modelNames.size()-1) {
-               currModel = 0;
+           mesh = PLYMesh();
+           if (currFile == modelNames.size()-1) {
+               currFile = 0;
            }
            else {
-               currModel++;
+               currFile++;
            }
-           mesh.load("../models/" + modelNames[currModel]);
+           mesh.load("../models/" + modelNames[currFile]);
            vec3 mins = mesh.minBounds();
            vec3 maxs = mesh.maxBounds();
            float scale = glm::min(glm::min(10 / (maxs.x - mins.x), 10 / (maxs.y - mins.y)), 10 / (maxs.z - mins.z));
@@ -136,13 +128,14 @@ public:
        }
        else if (key == GLFW_KEY_P) {
            mesh.clear();
-           if (currModel == 0) {
-               currModel = modelNames.size() - 1;
+           mesh = PLYMesh();
+           if (currFile == 0) {
+               currFile = modelNames.size() - 1;
            }
            else {
-               currModel--;
+               currFile--;
            }
-           mesh.load("../models/" + modelNames[currModel]);
+           mesh.load("../models/" + modelNames[currFile]);
            vec3 mins = mesh.minBounds();
            vec3 maxs = mesh.maxBounds();
            float scale = glm::min(glm::min(10 / (maxs.x - mins.x), 10 / (maxs.y - mins.y)), 10 / (maxs.z - mins.z));
@@ -165,32 +158,16 @@ public:
                currShader++;
            }
        }
-       else if (key == GLFW_KEY_T) {
-           doTexture = !doTexture;
-       }
-       else if (key == GLFW_KEY_Y) {
-           if (doTexture) {
-               if (currTexture == textureNames.size() - 1) {
-                   currTexture = 0;
-               }
-               else {
-                   currTexture++;
-               }
-               renderer.loadTexture(textureNames[currTexture], "../textures/" + textureNames[currTexture], currTexture);
-           }
-       }
    }
 
    void draw() {
       renderer.beginShader(shaders[currShader]); // activates shader with given name
       
-      if (doTexture) {
-          renderer.texture("diffuseTexture", textureNames[currTexture]);
-      }
-
       renderer.setUniform("eyePos", eyePos);
       renderer.setUniform("lightPos", lightPos);
-      renderer.setUniform("HasUV", doTexture);
+      renderer.setUniform("material.ambient", vec3(0.1, 0.1, 0.1));
+      renderer.setUniform("material.diffuse", vec3(0.0, 0.0, 1.0));
+      renderer.setUniform("material.specular", vec3(1.0, 1.0, 1.0));
 
       float aspect = ((float)width()) / height();
       renderer.perspective(glm::radians(60.0f), aspect, 0.1f, 50.0f);
@@ -215,10 +192,7 @@ protected:
    vec3 translation;
    vec3 scalar;
    std::vector<string> modelNames;
-   int currModel = 0;
-   std::vector<string> textureNames;
-   int currTexture = 0;
-   bool doTexture = false;
+   int currFile = 0;
    GLfloat Radius = 10;
    GLfloat Azimuth = 0;
    GLfloat Elevation = 0;

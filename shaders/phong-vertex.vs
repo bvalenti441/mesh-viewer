@@ -2,7 +2,7 @@
 
 layout (location = 0) in vec3 vPos;
 layout (location = 1) in vec3 vNormals;
-layout (location = 2) in vec2 vUV;
+layout (location = 2) in vec2 vTextureCoords;
 
 uniform mat3 NormalMatrix;
 uniform mat4 ModelViewMatrix;
@@ -19,16 +19,10 @@ struct Material {
 
 uniform Material material;
 
-out vec2 uv;
-out vec3 color;
+out vec3 newColor;
 
 void main()
 {
-	if (HasUV) {
-		uv = vUV;
-	} else {
-		uv = vec2(0,0);
-	}
 	vec3 normEye = normalize(NormalMatrix * vNormals);
 	vec3 posEye = vec3(ModelViewMatrix * vec4(vPos, 1.0));
 	
@@ -39,7 +33,7 @@ void main()
 	vec3 reflectDir = reflect(-lightDir, normEye);
 	vec3 specular = material.specular * pow(max(dot(viewDir, reflectDir), 0.0), 32);
 	
-	color = material.ambient + diffuse + specular;
+	newColor = material.ambient + diffuse + specular;
 	
 	gl_Position = MVP * vec4(vPos, 1.0);
 }

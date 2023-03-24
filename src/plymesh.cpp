@@ -95,6 +95,15 @@ namespace agl {
           _normals.push_back(stof(s));
       }
       if (getline(ss, s, ' ')) {
+          _colors.push_back(stof(s));
+          getline(ss, s, ' ');
+          _colors.push_back(stof(s));
+          getline(ss, s, ' ');
+          _colors.push_back(stof(s));
+      }
+      if (getline(ss, s, ' ')) {
+          _uvs.push_back(stof(s));
+          getline(ss, s, ' ');
           _uvs.push_back(stof(s));
           getline(ss, s, ' ');
           _uvs.push_back(stof(s));
@@ -141,6 +150,15 @@ namespace agl {
               _normals.push_back(stof(s));
           }
           if (getline(ss, s, ' ')) {
+              _colors.push_back(stof(s));
+              getline(ss, s, ' ');
+              _colors.push_back(stof(s));
+              getline(ss, s, ' ');
+              _colors.push_back(stof(s));
+          }
+          if (getline(ss, s, ' ')) {
+              _uvs.push_back(stof(s));
+              getline(ss, s, ' ');
               _uvs.push_back(stof(s));
               getline(ss, s, ' ');
               _uvs.push_back(stof(s));
