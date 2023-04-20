@@ -91,14 +91,14 @@ set(SOURCES
     src/osutils.cpp )
 
 set(SHADERS
-    shaders/toon.fs
-    shaders/toon.vs
     shaders/phong-pixel.fs
     shaders/phong-pixel.vs
     shaders/phong-vertex.fs
     shaders/phong-vertex.vs
     shaders/normals.fs
     shaders/normals.vs
+    shaders/toon.fs
+    shaders/toon.vs
     shaders/unlit.fs
     shaders/unlit.vs)
 
